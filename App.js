@@ -1,10 +1,24 @@
 import { StyleSheet, Text, View } from "react-native";
 import ImageViewer from "./components/imageViewer";
 import Button from "./components/Button";
+import * as ImagePicker from 'expo-image-picker';
+import { useState } from "react";
 export default function App() {
+  const [selectedImage, setSelectedImage] = useState(null);
+  async function pickImage (){
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing:true,
+      quality:1
+    });
+    if(!result.canceled){
+      setSelectedImage(result.assets[0].uri);
+      return;
+    }
+    alert("You did not select any image.");
+  }
   const placeholderImage = require("./assets/images/background-image.png");
   const buttonArr = [
-    { text: "Choose a photo", theme: "primary" },
+    { text: "Choose a photo", theme: "primary", onPress:pickImage },
     { text: "Use this photo" },
   ];
   return (
@@ -12,7 +26,7 @@ export default function App() {
       <View style={styles.headingContainer}>
       <Text style={styles.heading}>Sticker Smash</Text>
       </View>
-      <ImageViewer image={placeholderImage} />
+      <ImageViewer placeholderImageSource={placeholderImage} selectedImage={selectedImage} />
       <View style={styles.footerContainer}>
         {buttonArr.map((item, index) => (
           <Button key={index} {...item} />
