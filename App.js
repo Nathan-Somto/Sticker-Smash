@@ -3,7 +3,9 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import ImageViewer from "./components/imageViewer";
 import Button from "./components/Button";
 import * as ImagePicker from 'expo-image-picker';
-import { useState } from "react";
+import * as MediaLibrary from 'expo-media-library'
+import {captureRef} from 'react-native-view-shot';
+import { useState,useRef } from "react";
 import IconButton from './components/IconButton';
 import CircleButton from './components/CircleButton';
 import EmojiPicker from "./components/EmojiPicker";
@@ -14,6 +16,12 @@ export default function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [showAppOptions, setShowAppOptions] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [status, requestPermission] = MediaLibrary.usePermissions();
+  const viewRef = useRef(null);
+  if(status === null)
+  {
+    requestPermission();
+  }
   async function pickImage (){
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing:true,
@@ -38,7 +46,20 @@ export default function App() {
   };
 
   const onSaveImage = async () => {
-   
+   try{
+    const localUri = await captureRef(viewRef,{
+      height:440,
+      quality:1
+    })
+    await MediaLibrary.saveToLibraryAsync(localUri);
+    if (localUri)
+    {
+      alert('Saved');
+    }
+   }
+   catch(err){
+    console.log(err);
+   }
   };
   const onModalClose = () => {
     setIsModalVisible(false);
@@ -55,7 +76,7 @@ export default function App() {
       <View style={styles.headingContainer}>
       <Text style={styles.heading}>Sticker Smash</Text>
       </View>
-      <View style={styles.imageContainer}>
+      <View style={styles.imageContainer} ref={viewRef} collapsable={false}>
         <ImageViewer placeholderImageSource={placeholderImage} selectedImage={selectedImage} />
         {pickedEmoji !== null ? <EmojiSticker imageSize={40} stickerSource={pickedEmoji} /> : null}
       </View>
