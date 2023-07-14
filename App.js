@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
+import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import ImageViewer from "./components/imageViewer";
 import Button from "./components/Button";
 import * as ImagePicker from 'expo-image-picker';
@@ -50,7 +51,7 @@ export default function App() {
     { text: "Use this photo", onPress:ToggleAppOptions },
   ];
   return (
-    <View style={styles.container}>
+   <GestureHandlerRootView style={styles.container}>
       <View style={styles.headingContainer}>
       <Text style={styles.heading}>Sticker Smash</Text>
       </View>
@@ -77,7 +78,7 @@ export default function App() {
         {/* A list of emoji component will go here */}
         <EmojiList onSelect={setPickedEmoji} onCloseModal={onModalClose} />
       </EmojiPicker>
-    </View>
+    </GestureHandlerRootView>
   );
 }
 
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
   },
   imageContainer:{
     flex:1,
-    paddingTop:10
+    paddingTop:10,
 },
   heading:{
     fontSize:30,

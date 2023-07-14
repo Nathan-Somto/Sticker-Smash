@@ -1,7 +1,12 @@
 import { StyleSheet, Text, View,Pressable } from 'react-native'
 import React from 'react'
 import { FontAwesome } from '@expo/vector-icons'
-
+/**
+ * 
+ * @param {{text:string, theme:string, onPress:((event: GestureResponderEvent) => void) | null | undefined}} 
+ * @returns  React.JSX.Element
+ * @description customizable button component built from scratch with the pressable component.
+ */
 export default function Button({text,theme,onPress}) {
     if(theme==="primary"){
        return( <View
